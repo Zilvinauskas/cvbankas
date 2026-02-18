@@ -1,0 +1,1 @@
+scraping tool project for cvbankas.lt using Camoufox and Parsel.
