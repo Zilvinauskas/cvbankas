@@ -23,25 +23,45 @@ def main():
             selector = Selector(text=html)
             
             # Extract data using CSS 
-            job_titles = selector.css("h3.list_h3::text").getall()
+            job_cards = selector.css("a.list_a")
+            print(f"number of cards - {len(job_cards)}")
             
-            #links = selector.css("a.list_a::attr(href)").getall()
-            
-            # Copy jobs from list to master list
-            jobs.extend(job_titles + links)
+            # Extract stuff from job listing card
+            for card in job_cards:
+                item = {
+                    "title": card.css("h3.list_h3::text").get(),
+                    "link": card.css("::attr(href)").get()
+                }               
+                # go to job ad
+                page.goto(item["link"])
+                page.wait_for_load_state("networkidle")
+                print(f"I am currently at: {page.url}")
+                
+                # get html for Parsel
+                job_html = page.content()
+                job_selector = Selector(text=job_html)
+                
+                #select description
+                description = job_selector.css("#jobad_content_main *::text").getall()
+                full_text = " ".join([text.strip() for text in description if text.strip()])             
+                        
+                # add to list to be printed
+                if search.strip().lower() in full_text.lower():
+                    jobs.append(item)
 
+            # last page check
             if page.url != requested_url:
-                print("done")
+                print("\n done \n ------------------------\n")
                 break
-
-            if page_number > 20:
+            
+            # for testing purposes - only scan ads on first page of cvbankas
+            if page_number >= 1:
                 break
 
             page_number += 1
             
         for job in jobs:
-            if search in job.lower():
-                print(f"- {job.strip()}")
+            print(f"{job["title"]}, {job["link"]}\n")
 
 if __name__ == "__main__":
     main()
