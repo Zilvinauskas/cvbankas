@@ -1,1 +1,1 @@
-scraping tool project for cvbankas.lt using Camoufox and Parsel.
+Scraping tool project for cvbankas.lt using Camoufox and Parsel.
