@@ -8,7 +8,7 @@ def main():
         
         page = browser.new_page()
         page_number = 1
-        title = 0
+        title = 1
   
         while True:
             # open page
