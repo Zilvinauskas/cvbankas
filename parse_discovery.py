@@ -3,14 +3,14 @@ import csv
 
 def main():
     
-    title = 0 
+    title = 1
     links = []  
 
     while True:       
         
         try:
             # open html
-            with open(f"html/file{title}.html", "r") as file:
+            with open(f"htmls/file{title}.html", "r") as file:
                 print(f"Opening file no:{title}")            
                 html = file.read()
             
@@ -23,7 +23,7 @@ def main():
                 links.append(card.css("::attr(href)").get())                            
             
             title += 1
-        
+
         #catch exception with last html file
         except FileNotFoundError:
             print("done")
