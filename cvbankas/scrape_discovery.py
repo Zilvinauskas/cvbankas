@@ -1,5 +1,6 @@
 from camoufox.sync_api import Camoufox
 from parsel import Selector
+import time
 
 def main():
 
@@ -31,7 +32,7 @@ def main():
 
             page_number += 1
             title += 1
-                 
+            time.sleep(10)
         
 if __name__ == "__main__":
     main()
