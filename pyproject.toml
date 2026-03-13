@@ -1,5 +1,5 @@
 [tool.poetry]
-package-mode = false
+package-mode = true
 
 [project]
 name = "cvbankas"
@@ -17,10 +17,14 @@ dependencies = [
     "parsel (>=1.11.0,<2.0.0)",
     "camoufox (>=0.4.11,<0.5.0) ; python_version >= \"3.12\" and python_version < \"4.0\"",
     "dataset (>=1.6.2,<2.0.0)",
-    "psycopg[binary] (>=3.3.3,<4.0.0)"
+    "psycopg[binary] (>=3.3.3,<4.0.0)",
+    "typer[all] (>=0.24.1,<0.25.0)"
 ]
 
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+cvb = "cvbankas.main:app"
