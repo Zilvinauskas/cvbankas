@@ -11,3 +11,11 @@ parse.py: Processes every HTML file in the /jobhtmls directory to extract struct
 schema.sql: Initializes the required schema and creates a table within the PostgreSQL database.
 
 fill_db.py: Iterates through the /jsons directory and populates the PostgreSQL table with the data from each JSON file.
+
+You can run program with cli:
+
+poetry run cvb "command"
+
+available commands: 
+
+"scrape-discovery", "scrape", "parse-discovery", "parse/init-db"

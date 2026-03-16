@@ -1,8 +1,9 @@
 from camoufox.sync_api import Camoufox
 from parsel import Selector
 import time
+import typer
 
-def main():
+def run_scrape_discovery():
 
     # humanize=True makes mouse movement look real
     with Camoufox(headless=True, humanize=True) as browser:
@@ -35,4 +36,4 @@ def main():
             time.sleep(10)
         
 if __name__ == "__main__":
-    main()
+    run_scrape_discovery()

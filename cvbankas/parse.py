@@ -1,8 +1,9 @@
 import json
+import typer
 from pathlib import Path
 from parsel import Selector
 
-def main():
+def run_parse():
 
     count = 0
     
@@ -69,4 +70,4 @@ def main():
 
     
 if __name__ == "__main__":
-    main()
+    run_parse()

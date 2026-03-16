@@ -1,7 +1,8 @@
 from parsel import Selector
 import csv
+import typer
 
-def main():
+def run_parse_discovery():
     
     title = 1
     links = []  
@@ -35,4 +36,4 @@ def main():
             file.write(link.strip() + "\n")
         
 if __name__ == "__main__":
-    main()
+    run_parse_discovery()

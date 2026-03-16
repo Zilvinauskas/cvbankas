@@ -1,8 +1,9 @@
 from camoufox.sync_api import Camoufox
 from parsel import Selector
 import time
+import typer
 
-def main():    
+def run_scrape():    
 
     all_links = []
     title = 1
@@ -27,4 +28,4 @@ def main():
             time.sleep(10)
 
 if __name__ == "__main__":
-    main()
+    run_scrape()
