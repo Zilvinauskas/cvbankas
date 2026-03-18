@@ -9,12 +9,12 @@ from cvbankas.parse_discovery import run_parse_discovery
 app = typer.Typer(help="available commands: 'scrape_discovery', 'parse_discovery', 'scrape', 'parse'")
 
 @app.command()
-def scrape():
-    run_scrape()  
+def scrape(downloader):
+    run_scrape(downloader)  
  
 @app.command()
-def scrape_discovery():
-    run_scrape_discovery() 
+def scrape_discovery(downloader):
+    run_scrape_discovery(downloader) 
     
 @app.command()
 def parse():

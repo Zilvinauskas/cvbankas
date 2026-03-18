@@ -18,7 +18,11 @@ dependencies = [
     "camoufox (>=0.4.11,<0.5.0) ; python_version >= \"3.12\" and python_version < \"4.0\"",
     "dataset (>=1.6.2,<2.0.0)",
     "psycopg[binary] (>=3.3.3,<4.0.0)",
-    "typer[all] (>=0.24.1,<0.25.0)"
+    "typer[all] (>=0.24.1,<0.25.0)",
+    "curl-cffi (>=0.14.0,<0.15.0)",
+    "rnet (>=2.4.2,<3.0.0)",
+    "patchright (>=1.58.2,<2.0.0)",
+    "asyncio (>=4.0.0,<5.0.0)"
 ]
 
 
