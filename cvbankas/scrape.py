@@ -3,7 +3,6 @@ from curl_cffi import requests
 from parsel import Selector
 from rnet import Impersonate, Client, Response
 from patchright.sync_api import sync_playwright
-import asyncio
 import time
 import typer
 import os
@@ -22,6 +21,9 @@ class Downloader:
     def stop(self):
         pass
     
+    def get_url(self):
+        pass
+    
     def get_html(self, url: str) -> str:
         pass
 
@@ -37,7 +39,13 @@ class CamoufoxDownloader(Downloader):
     
     def get_html(self, url: str) -> str:
         self.page.goto(url)
+        self.page.wait_for_load_state("networkidle") 
         return self.page.content()
+    
+    def get_url(self) -> str:
+        if self.page:
+            return self.page.url
+        return "bot not started"
 
     def stop(self):
         if self.browser:
@@ -53,7 +61,12 @@ class CffiDownloader(Downloader):
         
     def get_html(self, url:str ) -> str:
         html = self.session.get(url, impersonate="chrome120")
+        
+        self.last_url = html.url
         return html.text
+
+    def get_url(self) -> str:
+        return self.last_url
 
     def stop(self):
         if self.session:
@@ -61,11 +74,11 @@ class CffiDownloader(Downloader):
 
 class PlayrightDownloader(Downloader):
     
-    def __init__(self):        
+    def __init__(self) -> None:        
         self.browser = None
         self.page = None
         
-    def start(self):        
+    def start(self) -> None:        
         self.pr = sync_playwright().start()
         self.browser = self.pr.chromium.launch()
         self.page = self.browser.new_page()
@@ -74,15 +87,21 @@ class PlayrightDownloader(Downloader):
         self.page.goto(url)
         html = self.page.content()
         return html 
+    
+    def get_url(self) -> str:
+        if self.page:
+            return self.page.url
+        return "bot not started"
 
-    def stop(self):
+    def stop(self) -> None:
         if self.browser:
            self.browser.close()
         # stop pr engine
         if self.pr:
             self.pr.stop()
 
-def run_scrape(downloader_type):    
+
+def run_scrape(downloader_type) -> None:    
 
     all_links = []
     title = 1
@@ -95,10 +114,10 @@ def run_scrape(downloader_type):
     if downloader_type == "cfox":  
         bot = CamoufoxDownloader()
          
-    if downloader_type == "cffi":
+    elif downloader_type == "cffi":
          bot = CffiDownloader()                   
           
-    if downloader_type == "playright":
+    elif downloader_type == "playright":
         bot = PlayrightDownloader()     
     
     else:

@@ -2,7 +2,7 @@ from parsel import Selector
 import csv
 import typer
 
-def run_parse_discovery():
+def run_parse_discovery() -> None:
     
     title = 1
     links = []  

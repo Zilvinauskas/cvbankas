@@ -3,7 +3,7 @@ import typer
 from pathlib import Path
 from parsel import Selector
 
-def run_parse():
+def run_parse() -> None:
 
     count = 0
     

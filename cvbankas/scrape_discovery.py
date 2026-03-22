@@ -1,39 +1,60 @@
 from camoufox.sync_api import Camoufox
+from curl_cffi import requests
 from parsel import Selector
+from rnet import Impersonate, Client, Response
+from patchright.sync_api import sync_playwright
+from cvbankas.scrape import CamoufoxDownloader, CffiDownloader, PlayrightDownloader
 import time
 import typer
+import os
 
-def run_scrape_discovery():
 
-    # humanize=True makes mouse movement look real
-    with Camoufox(headless=True, humanize=True) as browser:
+def run_scrape_discovery(downloader_type) -> None:       
+
+    page_number = 164
+    delay = 5
+    
+    if downloader_type == "cfox":  
+        bot = CamoufoxDownloader()
         
-        page = browser.new_page()
-        page_number = 1
-        title = 1
-  
-        while True:
-            # open page
+    elif downloader_type == "cffi":
+        bot = CffiDownloader()                   
+        
+    elif downloader_type == "playright":
+        bot = PlayrightDownloader()       
+    
+    else:
+        print(f"Unknown downloader: {downloader_type}. Supported: camoufox, cffi, playright") 
+        
+    bot.start()
+    
+    print(downloader_type, "initialized")
+    
+    while True:
+        
+        try:
             print(f"Opening page {page_number}")
-            requested_url = f"https://www.cvbankas.lt/?page={page_number}"
-            page.goto(requested_url)
+            requested_url = f"https://www.cvbankas.lt/?page={page_number}"  
             
-            # delay
-            page.wait_for_load_state("networkidle")        
+            
+            html_content = bot.get_html(requested_url)        
 
-                
             # last page check
-            if page.url != requested_url:
-                print("\n done \n ------------------------\n")
+            current_url = bot.get_url()
+            if current_url != requested_url:
+                print("done")
                 break
+                
+            with open(f"htmls/file{page_number}.html", "w", encoding="utf-8") as file:
+                file.write(html_content)
+                
+        except Exception as e:
+            print(f"could not open: {requested_url}: {e}")
             
-            #save htmls to html dir
-            with open(f"htmls/file{title}.html", "w", encoding="utf-8") as file:
-                file.write(page.content())
+        page_number += 1
+        time.sleep(delay)
+            
 
-            page_number += 1
-            title += 1
-            time.sleep(10)
         
 if __name__ == "__main__":
     run_scrape_discovery()

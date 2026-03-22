@@ -9,19 +9,19 @@ from cvbankas.parse_discovery import run_parse_discovery
 app = typer.Typer(help="available commands: 'scrape_discovery', 'parse_discovery', 'scrape', 'parse'")
 
 @app.command()
-def scrape(downloader):
+def scrape(downloader) -> None:
     run_scrape(downloader)  
  
 @app.command()
-def scrape_discovery(downloader):
+def scrape_discovery(downloader) -> None:
     run_scrape_discovery(downloader) 
     
 @app.command()
-def parse():
+def parse() -> None:
     run_parse()   
     
 @app.command()
-def parse_discovery():
+def parse_discovery() -> None:
     run_parse_discovery()      
  
  
