@@ -8,130 +8,124 @@ import time
 import typer
 import os
 
-def run_scrape(downloader):    
+# parent class
+class Downloader:
+    def __init__(self, headers = None):
+        self.headers = headers or {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0",
+            "Accept-Language": "en-US,en;q=0.9"
+        }
+    
+    def start(self):
+        pass
+    
+    def stop(self):
+        pass
+    
+    def get_html(self, url: str) -> str:
+        pass
+
+class CamoufoxDownloader(Downloader):
+    
+    def __init__(self):
+        self.browser = None
+        self.page = None
+        
+    def start(self):
+        self.browser = Camoufox(headless=True, humanize=True).start()
+        self.page = self.browser.new_page()  
+    
+    def get_html(self, url: str) -> str:
+        self.page.goto(url)
+        return self.page.content()
+
+    def stop(self):
+        if self.browser:
+            self.browser.close()
+            
+class CffiDownloader(Downloader):
+
+    def __init__(self):        
+        self.session = None
+        
+    def start(self):        
+        self.session = requests.Session()
+        
+    def get_html(self, url:str ) -> str:
+        html = self.session.get(url, impersonate="chrome120")
+        return html.text
+
+    def stop(self):
+        if self.session:
+            self.session.close()
+
+class PlayrightDownloader(Downloader):
+    
+    def __init__(self):        
+        self.browser = None
+        self.page = None
+        
+    def start(self):        
+        self.pr = sync_playwright().start()
+        self.browser = self.pr.chromium.launch()
+        self.page = self.browser.new_page()
+        
+    def get_html(self, url: str) -> str:
+        self.page.goto(url)
+        html = self.page.content()
+        return html 
+
+    def stop(self):
+        if self.browser:
+           self.browser.close()
+        # stop pr engine
+        if self.pr:
+            self.pr.stop()
+
+def run_scrape(downloader_type):    
 
     all_links = []
+    title = 1
     # set delay for opening new page
     delay = 5  
     with open("links.txt", "r") as my_file:
         all_links = my_file.readlines()
-    
-
-              
-    def camoufox(delay): 
-        title = 1           
-        with Camoufox(headless=True, humanize=True) as browser:
-            page = browser.new_page()                 
-                
-            for link in all_links:
-                # open link
-                url = link.strip()
-                print("going to: ", url)
-                
-                try:
-                    page.goto(url)
-                    page.wait_for_load_state("networkidle")
-                    html = page.content()  
-            
-                    # save html to jobhtmls           
-                    with open(f"jobhtmls/job_file{title}.html", "w", encoding="utf-8") as file:
-                        file.write(html)
-                
-                except Exception as e:
-                    print(f"could not open {url}: {e}") 
-            
-                title += 1
-                time.sleep(delay)     
-            
-                       
-    def cffi(delay):
-        title = 1     
-        with requests.Session() as s:
-            for link in all_links:
-                url = link.strip()
-                print("going to: ", url)
-                
-                try: 
-                    response = s.get(url, impersonate="chrome120", timeout=30)
-                    
-                    # raise exception if error
-                    response.raise_for_status()
-                    
-                    html = response.text
-                        
-                    with open(f"jobhtmls/job_file{title}.html", "w", encoding="utf-8") as file:
-                        file.write(html)
-                                            
-                except Exception as e:
-                    print(f"could not open {url}: {e}")
-                        
-                title += 1
-                time.sleep(delay)    
-            
-            
-    def rnet(delay):
-        title = 1     
-        client = Client(impersonate = Impersonate.Chrome120)
-        
-        for link in all_links:
-            url = link.strip()
-            print("going to: ", url)
-            
-            try:
-                response: Response = client.get(url)
-
-                html = response.text
-                with open(f"jobhtmls/job_file{title}.html", "w", encoding="utf-8") as file:
-                    file.write(html)
-                                            
-            except Exception as e:
-                print(f"could not open {url}: {e}") 
-                
-            title += 1
-            time.sleep(delay)
-        
-         
-    def playright(delay):
-        title = 1 
-        with sync_playwright() as pr:
-            browser = pr.chromium.launch()
-            page = browser.new_page()
-            
-            for link in all_links:
-                url = link.strip()
-                print("going to: ", url)
-                try:
-                    page.goto(url)
-                    
-                    html = page.content()
-                    
-                    with open(f"jobhtmls/job_file{title}.html", "w", encoding="utf-8") as file:
-                        file.write(html)
-                except Exception as e:
-                    print(f"could not open {url}: {e}") 
-                    
-                title += 1
-                time.sleep(delay)     
  
-                    
-    # open using camoufox
-    if downloader == "cfox":  
-        camoufox(delay)
-     
-    # open using curl_cffi            
-    if downloader == "cffi":
-        cffi(delay)
-        
-    # open using rnet
-    if downloader == "rnet":
-        rnet(delay)   
-                     
-    # open using playright             
-    if downloader == "playright":
-        playright(delay)  
+
+    if downloader_type == "cfox":  
+        bot = CamoufoxDownloader()
+         
+    if downloader_type == "cffi":
+         bot = CffiDownloader()                   
+          
+    if downloader_type == "playright":
+        bot = PlayrightDownloader()     
     
     else:
-        print(f"Unknown downloader: {downloader}. Supported: camoufox, cffi, rnet, playright")     
+        print(f"Unknown downloader: {downloader_type}. Supported: camoufox, cffi, rnet, playright")       
+         
+    print(downloader_type, "initialized")
+    
+    bot.start()
+    
+    for link in all_links:
+        
+        try:
+            html_content = bot.get_html(link.strip())
+            
+            print(f"opening page: {link.strip()}")
+            
+            with open(f"jobhtmls/job_file{title}.html", "w", encoding="utf-8") as file:
+                file.write(html_content)   
+                
+        except Exception as e:
+            print(f"could not open {link}: {e}") 
+                
+        title += 1
+        time.sleep(delay)       
+    
+    bot.stop()
+    print("scraping finished, ", downloader_type, "stopped")        
             
 if __name__ == "__main__":
     run_scrape() # type: ignore
