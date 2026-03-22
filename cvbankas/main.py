@@ -29,7 +29,7 @@ def parse_discovery() -> None:
 DB_URL = "postgresql://user:password@localhost:5432/cvbankas_db"
 
 @app.command()
-def init_db(schema_path: Path ="cvbankas/schema.sql"):
+def init_db(schema_path: Path ="cvbankas/schema.sql") -> None:
     # initialize postgres db with schema file
     if not schema_path.exists():
         typer.echo(f"Error: Schema file not found at {schema_path}", err=True)

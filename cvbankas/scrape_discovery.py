@@ -3,15 +3,14 @@ from curl_cffi import requests
 from parsel import Selector
 from rnet import Impersonate, Client, Response
 from patchright.sync_api import sync_playwright
-from cvbankas.scrape import CamoufoxDownloader, CffiDownloader, PlayrightDownloader
+from cvbankas.downloaders import CamoufoxDownloader, CffiDownloader, PlayrightDownloader
 import time
-import typer
-import os
+
 
 
 def run_scrape_discovery(downloader_type) -> None:       
 
-    page_number = 164
+    page_number = 1
     delay = 5
     
     if downloader_type == "cfox":  
