@@ -18,13 +18,70 @@ dependencies = [
     "camoufox (>=0.4.11,<0.5.0) ; python_version >= \"3.12\" and python_version < \"4.0\"",
     "dataset (>=1.6.2,<2.0.0)",
     "psycopg[binary] (>=3.3.3,<4.0.0)",
-    "typer[all] (>=0.24.1,<0.25.0)"
+    "typer[all] (>=0.24.1,<0.25.0)",
+    "curl-cffi (>=0.14.0,<0.15.0)",
+    "rnet (>=2.4.2,<3.0.0)",
+    "patchright (>=1.58.2,<2.0.0)",
+    "asyncio (>=4.0.0,<5.0.0)",
+    "pylint (>=4.0.5,<5.0.0)",
+    "pydantic (>=2.12.5,<3.0.0)"
 ]
 
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pylint]
+[tool.pylint.'MASTER']
+# more on https://github.com/samuelcolvin/pydantic/issues/1961#issuecomment-729288794
+extension-pkg-allow-list='pydantic'
+
+[tool.pylint.'MESSAGES CONTROL']
+disable=["missing-docstring", "fixme", "logging-fstring-interpolation"]
+
+[tool.pylint.'SIMILARITIES']
+ignore-imports = 'yes'
+
+[tool.pylint.'DESIGN']
+max-args = 6
+
+[tool.pylint.typecheck]
+generated-members = ["map"]
+
+[tool.pylint.'FORMAT']
+max-line-length=120
+min-public-methods=0
+
+[tool.ruff]
+line-length = 120
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+plugins = ["pydantic.mypy"]
+ignore_missing_imports = true
+
+
+[tool.ruff.lint]
+select = [
+    "E", "W",  # pycodestyle
+    "F",  # Pyflakes
+    "UP",  # pyupgrade
+    "SIM",  # flake8-simplify
+    "I",  # isort
+]
 
 [tool.poetry.scripts]
 cvb = "cvbankas.main:app"
+

@@ -1,39 +1,59 @@
-from camoufox.sync_api import Camoufox
-from parsel import Selector
+import sys
 import time
-import typer
+from typing import Any
 
-def run_scrape_discovery():
+from downloaders.CamoufoxDownloader import CamoufoxDownloader
+from downloaders.CffiDownloader import CffiDownloader
+from downloaders.PlayrightDownloader import PlayrightDownloader
 
-    # humanize=True makes mouse movement look real
-    with Camoufox(headless=True, humanize=True) as browser:
-        
-        page = browser.new_page()
-        page_number = 1
-        title = 1
-  
-        while True:
-            # open page
+
+def run_scrape_discovery(downloader_type: str) -> None:
+
+    page_number = 1
+    delay = 5
+
+    bot: Any
+
+    if downloader_type == "cfox":
+        bot = CamoufoxDownloader()
+
+    elif downloader_type == "cffi":
+        bot = CffiDownloader()
+
+    elif downloader_type == "playright":
+        bot = PlayrightDownloader()
+    else:
+        print(f"Unknown downloader: {downloader_type}. Supported: camoufox, cffi, playright")
+
+    bot.start_downloader()
+
+    print(downloader_type, "initialized")
+
+    while True:
+        try:
             print(f"Opening page {page_number}")
             requested_url = f"https://www.cvbankas.lt/?page={page_number}"
-            page.goto(requested_url)
-            
-            # delay
-            page.wait_for_load_state("networkidle")        
 
-                
+            html_content = bot.make_request(requested_url)
+
             # last page check
-            if page.url != requested_url:
-                print("\n done \n ------------------------\n")
+            current_url = bot.get_current_url()
+            if current_url != requested_url:
+                print("done")
                 break
-            
-            #save htmls to html dir
-            with open(f"htmls/file{title}.html", "w", encoding="utf-8") as file:
-                file.write(page.content())
 
-            page_number += 1
-            title += 1
-            time.sleep(10)
-        
+            with open(f"htmls/file{page_number}.html", "w", encoding="utf-8") as file:
+                file.write(html_content)
+
+        except Exception as e:
+            print(f"could not open: {requested_url}: {e}")
+
+        page_number += 1
+        time.sleep(delay)
+
+    bot.stop_downloader()
+
+
 if __name__ == "__main__":
-    run_scrape_discovery()
+    choice = sys.argv[2]
+    run_scrape_discovery(choice)
