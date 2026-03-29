@@ -4,7 +4,7 @@ from pathlib import Path
 from parsel import Selector
 
 
-def run_parse() -> None:
+def run_parse() -> None:  # pylint: disable=too-many-locals, R0801
 
     count = 0
 
@@ -17,7 +17,7 @@ def run_parse() -> None:
         selector = Selector(text=html)
 
         url = selector.xpath("//link[@rel='canonical']/@href").get() or ""
-        id = url.split("/")[-1] if url else "0"
+        job_id = url.split("/")[-1] if url else "0"
         title = selector.xpath("//h1[@class='heading1']/text()").get()
         location = selector.xpath("//span[@itemprop='addressLocality']/text()").get()
         company_name = selector.xpath("//h2[@id='jobad_company_title']/text()").get()
@@ -32,12 +32,16 @@ def run_parse() -> None:
             description_full.append(d.strip() + "\n")
 
         salary = selector.xpath(
-            "//div[@class='label_component_body'][span[@class='data_tag_component_salary_amount']]/span[@class='data_tag_component_salary_amount']/text()"
+            "//div[@class='label_component_body']"
+            "[span[@class='data_tag_component_salary_amount']]"
+            "/span[@class='data_tag_component_salary_amount']/text()"
         ).get()
 
         # find out if after_tax and salary type
         parts = selector.xpath(
-            "//div[@class='label_component'][div[@class='label_component_body']]/div[@class='label_component_body']/text()"
+            "//div[@class='label_component']"
+            "[div[@class='label_component_body']]"
+            "/div[@class='label_component_body']/text()"
         ).getall()
         joined_parts = "".join(parts).strip()
         after_tax = "rankas" in joined_parts
@@ -47,7 +51,7 @@ def run_parse() -> None:
         # json file
         job_details = {
             "url": url,
-            "job_id": id,
+            "job_id": job_id,
             "title": title,
             "location": location,
             "company_name": company_name,

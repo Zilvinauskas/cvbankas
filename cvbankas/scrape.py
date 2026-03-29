@@ -7,6 +7,7 @@ from downloaders.CffiDownloader import CffiDownloader
 from downloaders.PlayrightDownloader import PlayrightDownloader
 
 
+# pylint: disable=R0801
 def run_scrape(downloader_type: str) -> None:
 
     all_links = []
@@ -43,7 +44,7 @@ def run_scrape(downloader_type: str) -> None:
             with open(f"jobhtmls/job_file{title}.html", "w", encoding="utf-8") as file:
                 file.write(html_content)
 
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-exception-caught
             print(f"could not open {link}: {e}")
 
         title += 1

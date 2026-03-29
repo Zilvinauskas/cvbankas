@@ -1,13 +1,13 @@
 from camoufox.sync_api import Camoufox
-
+from playwright.sync_api import Browser, Page 
 from downloaders.BaseDownloader import BaseDownloader
 
 
 class CamoufoxDownloader(BaseDownloader):
 
-    def __init__(self):
-        self.browser = None
-        self.page = None
+    def __init__(self) -> None:
+        self.browser: Browser | None = None
+        self.page: Page | None = None
 
     def start_downloader(self):
         self.browser = Camoufox(headless=True, humanize=True).start()

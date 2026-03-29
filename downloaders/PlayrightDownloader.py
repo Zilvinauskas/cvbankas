@@ -1,4 +1,4 @@
-from patchright.sync_api import sync_playwright
+from patchright.sync_api import Browser, Page, sync_playwright
 
 from downloaders.BaseDownloader import BaseDownloader
 
@@ -6,8 +6,8 @@ from downloaders.BaseDownloader import BaseDownloader
 class PlayrightDownloader(BaseDownloader):
 
     def __init__(self) -> None:
-        self.browser = None
-        self.page = None
+        self.browser: Browser | None = None
+        self.page: Page | None = None
 
     def start_downloader(self) -> None:
         self.pr = sync_playwright().start()

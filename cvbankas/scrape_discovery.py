@@ -7,6 +7,7 @@ from downloaders.CffiDownloader import CffiDownloader
 from downloaders.PlayrightDownloader import PlayrightDownloader
 
 
+# pylint: disable=R0801
 def run_scrape_discovery(downloader_type: str) -> None:
 
     page_number = 1
@@ -45,7 +46,7 @@ def run_scrape_discovery(downloader_type: str) -> None:
             with open(f"htmls/file{page_number}.html", "w", encoding="utf-8") as file:
                 file.write(html_content)
 
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-exception-caught
             print(f"could not open: {requested_url}: {e}")
 
         page_number += 1
