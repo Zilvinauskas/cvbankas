@@ -20,7 +20,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install pip dependencies
-        run: pip install ruff mypy pydantic
+        run: pip install ruff==0.15.2 mypy pydantic
 
       - name: Run ruff (linter)
         run: ruff check .
