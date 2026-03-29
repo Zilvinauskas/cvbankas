@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class BaseDownloader(ABC):
     def __init__(self, headers = None):
         self.headers = headers or {
@@ -9,15 +10,15 @@ class BaseDownloader(ABC):
     @abstractmethod
     def start_downloader(self):
         pass
-    
+
     @abstractmethod
     def stop_downloader(self):
         pass
-    
+
     @abstractmethod
     def get_current_url(self):
         pass
-    
+
     @abstractmethod
     def make_request(self, url: str) -> str:
         pass
