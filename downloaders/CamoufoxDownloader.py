@@ -1,5 +1,5 @@
 from camoufox.sync_api import Camoufox
-from playwright.sync_api import Browser, Page 
+from playwright.sync_api import Browser, Page
 from downloaders.BaseDownloader import BaseDownloader
 
 
