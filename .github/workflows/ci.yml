@@ -23,7 +23,7 @@ jobs:
         uses: snok/install-poetry@v1
 
       - name: Install pip dependencies
-        run: poetry run ruff
+        run: poetry install
 
       - name: Run ruff (linter)
         run: poetry run ruff check .
