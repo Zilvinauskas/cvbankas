@@ -19,11 +19,17 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+
       - name: Install pip dependencies
-        run: pip install ruff==0.15.2 mypy pydantic
+        run: poetry run ruff
 
       - name: Run ruff (linter)
-        run: ruff check .
+        run: poetry run ruff check .
 
       - name: Run mypy (type checker)
-        run: mypy cvbankas/ downloaders/
+        run: poetry run mypy cvbankas/ downloaders/
+
+      - name: Run Pylint (quality check)
+        run: poetry run pylint cvbankas/ downloaders/
