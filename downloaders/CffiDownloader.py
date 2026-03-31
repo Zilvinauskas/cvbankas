@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any
 
 from curl_cffi import requests
 
@@ -8,7 +8,7 @@ from downloaders.BaseDownloader import BaseDownloader
 class CffiDownloader(BaseDownloader):
 
     def __init__(self) -> None:
-        self.session: Optional[Any] = None
+        self.session: Any | None = None
         self.last_url: str = ""
 
     def start_downloader(self) -> None:
