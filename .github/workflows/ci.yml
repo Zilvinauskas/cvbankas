@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  lint:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+
+      - name: Install pip dependencies
+        run: poetry install
+
+      - name: Run ruff (linter)
+        run: poetry run ruff check .
+
+      - name: Run mypy (type checker)
+        run: poetry run mypy cvbankas/ downloaders/
+
+      - name: Run Pylint (quality check)
+        run: poetry run pylint cvbankas/ downloaders/

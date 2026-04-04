@@ -51,7 +51,7 @@ def init_db(schema_path: Path = Path("cvbankas/schema.sql")) -> None:
 
             typer.echo("DB initialized")
 
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-exception-caught
         typer.echo(f"error: {e}", err=True)
 
 

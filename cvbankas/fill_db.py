@@ -9,12 +9,12 @@ json_dir = pathlib.Path("./jsons")
 
 def clean_data(data: dict) -> tuple[str, int]:
     # Join the description list
-    desc = "\n".join(data.get("description", []))
+    description = "\n".join(data.get("description", []))
 
     # Convert views to int
-    views = int(data.get("seens", 0))
+    view_count = int(data.get("seens", 0))
 
-    return desc, views
+    return description, view_count
 
 
 with psycopg.connect(CONN_INFO) as conn, conn.cursor() as cur:
@@ -22,24 +22,24 @@ with psycopg.connect(CONN_INFO) as conn, conn.cursor() as cur:
     # Loop through every JSON file
     for file_path in json_dir.glob("*.json"):
         with open(file_path, encoding="utf-8") as f:
-            data = json.load(f)
+            my_data = json.load(f)
 
         # clean
-        desc, views = clean_data(data)
+        desc, views = clean_data(my_data)
 
         rows.append(
             (
-                data["job_id"],
-                data["url"],
-                data["title"],
-                data["location"],
-                data["company_name"],
-                data["job_category"],
+                my_data["job_id"],
+                my_data["url"],
+                my_data["title"],
+                my_data["location"],
+                my_data["company_name"],
+                my_data["job_category"],
                 views,
                 desc,
-                data["salary"],
-                data["salary_type"],
-                data["is_vip"],
+                my_data["salary"],
+                my_data["salary_type"],
+                my_data["is_vip"],
             )
         )
 
