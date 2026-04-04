@@ -2,9 +2,9 @@ import sys
 import time
 from typing import Any
 
-from downloaders.CamoufoxDownloader import CamoufoxDownloader
-from downloaders.CffiDownloader import CffiDownloader
-from downloaders.PlayrightDownloader import PlayrightDownloader
+from downloaders.camoufox_downloader import CamoufoxDownloader
+from downloaders.cffi_downloader import CffiDownloader
+from downloaders.playright_downloader import PlayrightDownloader
 
 
 # pylint: disable=R0801

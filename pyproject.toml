@@ -38,7 +38,7 @@ build-backend = "poetry.core.masonry.api"
 extension-pkg-allow-list='pydantic'
 
 [tool.pylint.'MESSAGES CONTROL']
-disable=["missing-docstring", "fixme", "logging-fstring-interpolation"]
+disable=["missing-docstring", "fixme", "logging-fstring-interpolation", "R0801"]
 
 [tool.pylint.'SIMILARITIES']
 ignore-imports = 'yes'
@@ -52,6 +52,7 @@ generated-members = ["map"]
 [tool.pylint.'FORMAT']
 max-line-length=120
 min-public-methods=0
+# pylint: disable=R0801
 
 [tool.ruff]
 line-length = 120

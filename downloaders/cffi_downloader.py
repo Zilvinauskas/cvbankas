@@ -2,12 +2,12 @@ from typing import Any
 
 from curl_cffi import requests
 
-from downloaders.BaseDownloader import BaseDownloader
+from downloaders.base_downloader import BaseDownloader
 
 
 class CffiDownloader(BaseDownloader):
-
     def __init__(self) -> None:
+        super().__init__()
         self.session: Any | None = None
         self.last_url: str = ""
 
